@@ -41,7 +41,7 @@
   #### 6. After enter the password, 'show databases;' command will show what databases you have
   #### 7. Also, write the command 'use kon;' and 'show tables' respectively
 
-  ![default](images/1.png)
-  ![default](images/2.png)
+  ![default](utils/images/1.png)
+  ![default](utils/images/2.png)
 
   #### then you can see what you have like this!
