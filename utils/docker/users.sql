@@ -1,3 +1,5 @@
+USE kon;
+
 CREATE TABLE users(
  uno INT NOT NULL AUTO_INCREMENT, 
  full_name VARCHAR(50) ,

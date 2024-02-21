@@ -1,11 +1,13 @@
-CREATE TABLE user_name(
+USE kon;
+
+CREATE TABLE users_name(
  uno INT NOT NULL, 
  first_name VARCHAR(25),
  last_name VARCHAR(25),
  FOREIGN KEY (uno) REFERENCES users(uno)
 ) CHARSET=utf8mb4;
 
-INSERT INTO user_name 
+INSERT INTO users_name 
 (uno, first_name, last_name)
 VALUES
 (1, 'John', 'Doe'),

@@ -24,6 +24,29 @@
  to bring up the services with the project name 'kon'
  * docker-compose --project-name kon up -d
 
+ #### After up to this section, follow the instruction for making "mysql_auth" container (very important) 
+
+ * Open the terminal or command prompt.
+ * Find the directory Dockerfile is included(It is in utils)
+ * Write the command for making build image with Dockerfile
+ * docker build -t mysql_auth .
+
+ <img src="utils/images/5-1.png" alt="default" width="600" height="200">
+
+ * Image with the sql files are generated on the docker
+ * To make a port and container, write the following command
+ * docker run -d -p 3307:3306 --name mysql_auth mysql_auth
+ 
+ <img src="utils/images/5-2.png" alt="default" width="600" height="30">
+
+ * A new container and image named mysql_auth will show up on the docker desktop
+ * Now the workbench can be started with this connection
+ * Make a connection with port number 3307 and users and users_name are in the tables
+
+ <img src="utils/images/5-3.png" alt="default" width="500" height="150"><br/>
+ <img src="utils/images/5-4.png" alt="default" width="500" height="300"><br/>
+ <img src="utils/images/5-5.png" alt="default" width="500" height="300">
+
  ## 6. In MySQL Workbench, click on the '+' icon next to 'MySQL Connections' to create a new connection.
   * Verify that the port number is set to '3307'. You can find this in the 'Port' field. If it's not 3307, change it to 3307.
   * In the 'Username', 'password' field, enter the username and password provided in your Docker Compose configuration.
@@ -41,7 +64,7 @@
   #### 6. After enter the password, 'show databases;' command will show what databases you have
   #### 7. Also, write the command 'use kon;' and 'show tables' respectively
 
-  ![default](utils/images/1.png)
-  ![default](utils/images/2.png)
+  ![default](utils/images/7-1.png)
+  ![default](utils/images/7-2.png)
 
   #### then you can see what you have like this!
