@@ -44,3 +44,6 @@ bin/
 
 # intellij
 .idea
+
+# mysql data
+my-mysql-data
