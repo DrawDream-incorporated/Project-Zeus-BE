@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    image: mysql:8.0 # Or your preferred version
+    image: mysql:8.0
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     environment:
@@ -18,4 +18,5 @@ services:
 
 volumes:
   my-mysql-data:
+
 
