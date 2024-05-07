@@ -1,9 +1,9 @@
 name: Docker Image CI
 
 on:
-  pull_request:
+  push:
     branches: [ "main" ]
-    
+
 jobs:
   build:
     name: Build Image
@@ -30,7 +30,4 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
       - name: Build, tag, and push image to Amazon ECR
-        run: |
-          docker build -t sample:${{steps.current-time.outputs.formattedTime}} .
-          docker tag sample:${{steps.current-time.outputs.formattedTime}} xxx.dkr.ecr.ca-central-1.amazonaws.com/sample:${{steps.current-time.outputs.formattedTime}}
-          docker push xxx.dkr.ecr.ca-central-1.amazonaws.com/sample:${{steps.current-time.outputs.formattedTime}}
+ 
