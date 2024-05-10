@@ -7,6 +7,8 @@ WORKDIR /app
 # Copy the built artifact into the container
 COPY build/libs/*.jar myapp.jar
 
+EXPOSE 7000
+
 # Run the Spring Boot application
 ENTRYPOINT ["java","-jar","/app/myapp.jar"]
 
