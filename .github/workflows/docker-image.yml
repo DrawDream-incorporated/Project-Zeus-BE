@@ -1,3 +1,4 @@
+# Test
 name: Docker Image CI
 
 on:
@@ -34,6 +35,6 @@ jobs:
         id: login-ecr
       - name: Build, tag, and push image to Amazon ECR
         run: |
-          docker build -t sample:${{steps.current-time.outputs.formattedTime}} .
-          docker tag sample:${{steps.current-time.outputs.formattedTime}} ${{ secrets.AWS_ECR_REGISTRY }}:${{steps.current-time.outputs.formattedTime}}
-          docker push ${{ secrets.AWS_ECR_REGISTRY }}:${{steps.current-time.outputs.formattedTime}}
+          docker build -t posting-api:latest .
+          docker tag posting-api:latest ${{ secrets.AWS_ECR_REGISTRY }}:latest
+          docker push ${{ secrets.AWS_ECR_REGISTRY }}:latest
