@@ -38,3 +38,17 @@ jobs:
           docker build -t posting-api:latest .
           docker tag posting-api:latest ${{ secrets.AWS_ECR_REGISTRY }}:latest
           docker push ${{ secrets.AWS_ECR_REGISTRY }}:latest
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .ecs/prod/task.json # task파일
+          container-name: posting-api
+          image: ${{ steps.build-image.outputs.image }}
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ecs-task-posting-2 #클러스터 서비스 명
+          cluster: my-fisrt-cluster # 클러스터 명
+          wait-for-service-stability: true
