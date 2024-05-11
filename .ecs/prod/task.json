@@ -3,6 +3,7 @@
   "containerDefinitions": [
     {
       "name": "ecs-task-posting-2",
+      "image": "555223129948.dkr.ecr.ca-central-1.amazonaws.com/posting-api:latest",
       "cpu": 0,
       "portMappings": [
         {
