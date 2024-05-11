@@ -33,11 +33,26 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
         id: login-ecr
+#
+#      - name: Build, tag, and push image to Amazon ECR
+#        run: |
+#          docker build -t posting-api:latest .
+#          docker tag posting-api:latest ${{ secrets.AWS_ECR_REGISTRY }}:latest
+#          docker push ${{ secrets.AWS_ECR_REGISTRY }}:latest
+
       - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: sample # ecr 이름
+          IMAGE_TAG: ${{ github.run_number }} # git 커밋넘버를 이미지 이름 구분을 위해 넣어줌
         run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
           docker build -t posting-api:latest .
-          docker tag posting-api:latest ${{ secrets.AWS_ECR_REGISTRY }}:latest
           docker push ${{ secrets.AWS_ECR_REGISTRY }}:latest
+          echo "::set-output
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
