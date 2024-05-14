@@ -15,6 +15,6 @@ public class PostingController {
         @GetMapping("/test")
         public String hello() {
             log.info("test");
-            return "Hello, World! This is Test! Really?";
+            return "Hello, World! This is Test! Really? Test";
         }
 }
