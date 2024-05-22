@@ -5,6 +5,6 @@ import lombok.Getter;
 @Getter
 public class CommonResponse {
     boolean success;
-    int code;
+    int status;
     String message;
 }

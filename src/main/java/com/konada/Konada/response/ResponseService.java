@@ -11,24 +11,35 @@ public class ResponseService {
     public <T> SingleResponse<T> getSingleResponse(T data){
         SingleResponse singleResponse = new SingleResponse();
         singleResponse.data = data;
-        setSuccessResponse(singleResponse);
-
+        if (data == null){
+            setFailResponse(singleResponse);
+        }else {
+            setSuccessResponse(singleResponse);
+        }
         return singleResponse;
     }
 
     public <T> ListResponse<T> getListResponse(List<T> dataList){
         ListResponse listResponse = new ListResponse();
         listResponse.dataList = dataList;
-        System.out.println(dataList);
-        setSuccessResponse(listResponse);
-
+        if (dataList == null){
+            setFailResponse(listResponse);
+        }else {
+            setSuccessResponse(listResponse);
+        }
         return listResponse;
     }
 
     void setSuccessResponse(CommonResponse response){
-        response.code = 0;
+        response.status = 1;
         response.success = true;
         response.message = "SUCCESS";
+    }
+
+    void setFailResponse(CommonResponse response){
+        response.status = 2;
+        response.success = false;
+        response.message = "FAIL";
     }
 
 }
