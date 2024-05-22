@@ -23,6 +23,28 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    public Post updatePost(Long postId, Post postDetails) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+
+        post = Post.builder()
+                .postId(post.getPostId())
+                .user(post.getUser()) // Assuming user remains unchanged
+                .topic(post.getTopic()) // Assuming topic remains unchanged
+                .title(postDetails.getTitle())
+                .content(postDetails.getContent())
+                .tags(postDetails.getTags())
+                .createdAt(post.getCreatedAt()) // Assuming createdAt remains unchanged
+                .updatedAt(postDetails.getUpdatedAt())
+                .views(postDetails.getViews())
+                .voteLike(postDetails.getVoteLike())
+                .voteDislike(postDetails.getVoteDislike())
+                .deleteFlag(postDetails.getDeleteFlag())
+                .build();
+
+        return postRepository.save(post);
+
+    }
+
     public void deletePost(Long postId) {
         postRepository.deleteById(postId);
     }

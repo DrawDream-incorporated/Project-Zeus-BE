@@ -9,27 +9,28 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/topics")
+@RequestMapping("/api")
 public class TopicController {
     @Autowired
     private TopicService topicService;
 
-    @GetMapping
+    @GetMapping("/topics_read")
     public List<Topic> getAllTopics() {
         return topicService.getAllTopics();
     }
 
-    @GetMapping("/{id}")
-    public Topic getTopicById(@PathVariable Long id) {
-        return topicService.getTopicById(id);
-    }
-    @PostMapping
-    public Topic createTopic(@RequestBody Topic topic) {
-        return topicService.saveTopic(topic);
-    }
+//    @GetMapping("/{id}")
+//    public Topic getTopicById(@PathVariable Long id) {
+//        return topicService.getTopicById(id);
+//    }
+//    @PostMapping
+//    public Topic createTopic(@RequestBody Topic topic) {
+//        return topicService.saveTopic(topic);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public void deleteTopic(@PathVariable Long id) {
+//        topicService.deleteTopic(id);
+//    }
 
-    @DeleteMapping("/{id}")
-    public void deleteTopic(@PathVariable Long id) {
-        topicService.deleteTopic(id);
-    }
 }

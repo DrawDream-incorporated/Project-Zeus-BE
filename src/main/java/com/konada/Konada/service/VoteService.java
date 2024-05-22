@@ -15,8 +15,8 @@ public class VoteService {
         return voteRepository.findAll();
     }
 
-    public Vote getVoteById(Long voteId) {
-        return voteRepository.findById(voteId).orElse(null);
+    public Vote getVoteById(Long postId) {
+        return voteRepository.findById(postId).orElse(null);
     }
 
     public Vote saveVote(Vote vote) {

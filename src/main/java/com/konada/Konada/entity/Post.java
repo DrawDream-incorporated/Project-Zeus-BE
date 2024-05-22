@@ -58,5 +58,6 @@ public class Post {
     private int deleteFlag;
 
     // Getters and setters
+
 }
 
