@@ -1,13 +1,14 @@
 package com.konada.Konada.controller;
 
 import com.konada.Konada.entity.Post;
-import com.konada.Konada.response.ListResponse;
-import com.konada.Konada.response.ResponseService;
-import com.konada.Konada.response.SingleResponse;
+import com.konada.Konada.exception.DataAlreadyExistsException;
+import com.konada.Konada.response.*;
 import com.konada.Konada.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -16,35 +17,89 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
-    private final ResponseService responseService;
-
     @GetMapping("/posts_read")
-    public ListResponse<Post> getAllPosts() {
-        return responseService.getListResponse(postService.getAllPosts());
+    public ResponseEntity<?> getAllPosts() {
+        try {
+            List<Post> posts = postService.getAllPosts();
+            if (posts != null) {
+                return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "SUCCESS", posts));
+            } else {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                        .body(new ApiResponse<>(false, HttpStatus.NO_CONTENT.value(), "FAIL", "NO_CONTENT"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR"));
+        }
     }
-//    @GetMapping("/post_read")
-//    public Post getPostById(@RequestParam("post_id") Long postId) {
-//        return postService.getPostById(postId);
-//    }
 
     @GetMapping("/post_read")
-    public SingleResponse<Post> getPostById(@RequestParam("post_id") Long postId) {
-        return responseService.getSingleResponse(postService.getPostById(postId));
+    public ResponseEntity<?> getPostById(@RequestParam("post_id") Long postId) {
+        try {
+            Post post = postService.getPostById(postId);
+            if (post != null) {
+                return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "SUCCESS", post));
+            } else {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                        .body(new ApiResponse<>(false, HttpStatus.NO_CONTENT.value(), "FAIL", null));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR"));
+        }
     }
 
-
     @PostMapping("/post_create")
-    public Post createPost(@RequestBody Post post) {
-        return postService.savePost(post);
+    public ResponseEntity<?> createPost(@RequestBody Post post) {
+        try {
+            Post createdPost = postService.savePost(post);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse<>(true, HttpStatus.CREATED.value(), "SUCCESS", createdPost));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR"));
+        }
     }
 
     @PutMapping("/post_update")
-    public Post updatePost(@RequestParam("post_id") Long postId, @RequestBody Post post) {
-        return postService.updatePost(postId, post);
+    public ResponseEntity<?> updatePost(@RequestParam("post_id") Long postId, @RequestBody Post post) {
+        try {
+            Post updatedPost = postService.updatePost(postId, post);
+            if (updatedPost != null) {
+                return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "SUCCESS", updatedPost));
+            } else {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                        .body(new ApiResponse<>(false, HttpStatus.NO_CONTENT.value(), "FAIL", "NO_CONTENT"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR"));
+        }
     }
-    @DeleteMapping("/post_delete")
-    public void deletePost(@RequestParam("post_id") Long postId) {
-        postService.deletePost(postId);
+
+    @PutMapping("/post_delete")
+    public ResponseEntity<?> deletePost(@RequestParam("post_id") Long postId){
+        try {
+                Post deletedPost = postService.deletePost(postId);
+            if (deletedPost != null) {
+                return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "SUCCESS", deletedPost));
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(new ApiResponse<>(false, HttpStatus.CONFLICT.value(), "FAIL", "NO_CONTENT"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR"));
+        }
     }
 
 }
+
+
+//        try {
+//            postService.deletePost(postId);
+//            return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "SUCCESS", "Post deleted successfully"));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR"));
+//        }

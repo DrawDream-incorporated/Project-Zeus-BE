@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(PostingController.class)
+@WebMvcTest(TestController.class)
 class PostingControllerTest {
 
     @Autowired

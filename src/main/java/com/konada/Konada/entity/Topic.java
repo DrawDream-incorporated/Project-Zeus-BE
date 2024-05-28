@@ -22,5 +22,4 @@ public class Topic {
     @Column(name = "topic_name", nullable = false)
     private String topicName;
 
-    // Getters and setters
 }

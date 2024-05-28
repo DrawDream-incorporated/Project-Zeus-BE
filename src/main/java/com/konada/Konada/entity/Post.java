@@ -1,15 +1,13 @@
 package com.konada.Konada.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -56,8 +54,6 @@ public class Post {
 
     @Column(name = "delete_flg", nullable = false)
     private int deleteFlag;
-
-    // Getters and setters
 
 }
 

@@ -2,35 +2,39 @@ package com.konada.Konada.controller;
 
 import com.konada.Konada.entity.Post;
 import com.konada.Konada.entity.Topic;
+import com.konada.Konada.response.ApiResponse;
+import com.konada.Konada.response.ErrorApiResponse;
 import com.konada.Konada.service.TopicService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import java.util.UUID;
+
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class TopicController {
-    @Autowired
-    private TopicService topicService;
+
+
+    private final TopicService topicService;
 
     @GetMapping("/topics_read")
-    public List<Topic> getAllTopics() {
-        return topicService.getAllTopics();
+    public ResponseEntity<?> getAllTopics() {
+        try {
+            List<Topic> topics = topicService.getAllTopics();
+            if (topics != null) {
+                return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "SUCCESS", topics));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ApiResponse<>(true, HttpStatus.OK.value(), "FAIL", "DATA NOT FOUND"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR"));
+        }
     }
-
-//    @GetMapping("/{id}")
-//    public Topic getTopicById(@PathVariable Long id) {
-//        return topicService.getTopicById(id);
-//    }
-//    @PostMapping
-//    public Topic createTopic(@RequestBody Topic topic) {
-//        return topicService.saveTopic(topic);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public void deleteTopic(@PathVariable Long id) {
-//        topicService.deleteTopic(id);
-//    }
 
 }

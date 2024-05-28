@@ -1,39 +1,32 @@
 package com.konada.Konada.entity;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "Vote")
 public class Vote {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "vote_id")
-    private int voteId;
+    @EmbeddedId
+    private VoteId id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
-
-    @Column(name = "vote_like", nullable = false)
-    private int voteLike;
+    @Column(name = "vote_flag", nullable = false)
+    private int voteFlag;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    // Getters and setters
 }

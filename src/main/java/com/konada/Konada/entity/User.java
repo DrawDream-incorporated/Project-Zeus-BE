@@ -48,5 +48,5 @@ public class User {
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
 
-    // Getters and setters
+
 }
