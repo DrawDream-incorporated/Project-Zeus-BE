@@ -28,30 +28,24 @@ public class VoteService {
     @Transactional
     public Vote createVote(Vote vote) {
 
-        vote.setCreatedAt(LocalDateTime.now());
-
-        // Check if the vote already exists
         if (getVoteById(vote.getId().getUserId(), vote.getId().getPostId()).isPresent()) {
             throw new DataAlreadyExistsException("Vote already exists for userId: " + vote.getId().getUserId() +
                     " and postId: " + vote.getId().getPostId());
         }
 
-
+        vote.setCreatedAt(LocalDateTime.now());
         Vote savedVote = voteRepository.save(vote);
-
-        // 투표에 대한 게시물 조회
         VoteId voteId = vote.getId();
+
         Post post = postRepository.findById(voteId.getPostId())
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        // 좋아요/싫어요 수 업데이트
         if (vote.getVoteFlag() == 1) {
             post.setVoteLike(post.getVoteLike() + 1);
         } else if (vote.getVoteFlag() == -1) {
             post.setVoteDislike(post.getVoteDislike() + 1);
         }
 
-        // 게시물 업데이트
         postRepository.save(post);
 
         return savedVote;

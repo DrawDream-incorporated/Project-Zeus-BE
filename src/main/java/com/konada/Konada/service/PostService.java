@@ -28,6 +28,7 @@ public class PostService {
 
     public Post savePost(Post post) {
         post.setCreatedAt(LocalDateTime.now());
+        post.setUpdatedAt(LocalDateTime.now());
         return postRepository.save(post);
     }
 
