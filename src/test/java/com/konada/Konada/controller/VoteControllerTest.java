@@ -45,6 +45,7 @@ class VoteControllerTest {
 
     @BeforeEach
     public void setup() {
+
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
     @Test
@@ -78,6 +79,8 @@ class VoteControllerTest {
         assertThrows(DataAlreadyExistsException.class, () -> voteService.createVote(vote));
         verify(voteRepository, times(1)).findById(voteId);
         verify(voteRepository, never()).save(any(Vote.class));
+
+        // 데이터 지우기 ->
     }
 
 }

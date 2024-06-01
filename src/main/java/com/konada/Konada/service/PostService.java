@@ -4,6 +4,7 @@ import com.konada.Konada.entity.Post;
 import com.konada.Konada.exception.DataAlreadyExistsException;
 import com.konada.Konada.exception.DataNotFoundException;
 import com.konada.Konada.repository.PostRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
@@ -17,18 +18,21 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    @Query("SELECT p FROM Post p WHERE p.deleteFlag = 0")
     public List<Post> getAllPosts() {
-        return postRepository.findAll();
+        return postRepository.findAllActivePosts();
     }
 
     public Post getPostById(Long postId) {
-        return postRepository.findById(postId).orElse(null);
+        Post post = postRepository.findById(postId).orElseThrow(() -> new DataNotFoundException("Post not found"));
+        if (post.getDeleteFlag() == 1) {
+            throw new DataNotFoundException("Post Id is deleted");
+        }
+        return post;
     }
 
     public Post savePost(Post post) {
-        post.setCreatedAt(LocalDateTime.now());
-        post.setUpdatedAt(LocalDateTime.now());
+//        post.setCreatedAt(LocalDateTime.now());
+//        post.setUpdatedAt(LocalDateTime.now());
         return postRepository.save(post);
     }
 
@@ -54,19 +58,13 @@ public class PostService {
     }
 
     public Post deletePost(Long postId) {
-//        postRepository.deleteById(postId);
-//        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
-//        if (getVoteById(userId, postId).isEmpty()) {
-//            throw new DataNotFoundException("ID Not Found");
-//        }
-
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         if (post == null) {
             throw new DataNotFoundException("Cannot delete post because there are votes associated with it");
         }
-
-
         post.setDeleteFlag(1);
         return postRepository.save(post);
     }
+
+
 }
