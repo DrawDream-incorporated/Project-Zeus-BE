@@ -1,18 +1,13 @@
-
 package com.konada.Konada.controller;
 
 import com.konada.Konada.entity.Post;
 import com.konada.Konada.entity.User;
 import com.konada.Konada.entity.Topic;
-import com.konada.Konada.exception.DataNotFoundException;
 import com.konada.Konada.service.PostService;
-import com.konada.Konada.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +23,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 @WebMvcTest(PostController.class)
 @ExtendWith(MockitoExtension.class)
 public class PostControllerTest {
@@ -36,14 +30,8 @@ public class PostControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @InjectMocks
-    private PostController postController;
-
     @MockBean
     private PostService postService;
-
-    @Mock
-    private PostRepository postRepository;
 
     private Post savedPostNotDeleted;
     private Post savedPostDeleted;
@@ -73,7 +61,7 @@ public class PostControllerTest {
         savedPostNotDeleted = Post.builder()
                 .user(user)
                 .topic(topic)
-                .title("Title 1 ㅋㅋㅋㅋ")
+                .title("Title 1")
                 .content("Content 1")
                 .tags("Tag1")
                 .createdAt(LocalDateTime.now())
@@ -97,13 +85,9 @@ public class PostControllerTest {
                 .voteDislike(0)
                 .deleteFlag(1)
                 .build();
-
-        when(postService.savePost(any(Post.class))).thenReturn(savedPostNotDeleted);
-        when(postService.savePost(any(Post.class))).thenReturn(savedPostDeleted);
-
     }
 
-    @DisplayName("포스트 생성")
+    @DisplayName("UT-3-001 : Create new post ")
     @Test
     void testCreatePost_Success() throws Exception {
         Post post = Post.builder()
@@ -131,17 +115,17 @@ public class PostControllerTest {
         verify(postService, times(1)).savePost(any(Post.class));
     }
 
-    @DisplayName("postid로 해당 정의된 데이터가 잘 조회되는지")
+    @DisplayName("UT-4-001 : Read a post with Post ID")
     @Test
     void testGetPostById_Success() throws Exception {
-        //when(postService.getPostById(savedPostNotDeleted.getPostId())).thenReturn(savedPostNotDeleted);
+        when(postService.getPostById(savedPostNotDeleted.getPostId())).thenReturn(savedPostNotDeleted);
 
         mockMvc.perform(get("/api/post_read")
                         .param("post_id", String.valueOf(savedPostNotDeleted.getPostId()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.title").value("Title 1 ㅋㅋㅋㅋ"))
+                .andExpect(jsonPath("$.data.title").value("Title 1"))
                 .andExpect(jsonPath("$.data.content").value("Content 1"))
                 .andExpect(jsonPath("$.data.user.userId").value("user1"))
                 .andExpect(jsonPath("$.data.topic.topicId").value("topic1"))
@@ -154,22 +138,20 @@ public class PostControllerTest {
         verify(postService, times(1)).getPostById(savedPostNotDeleted.getPostId());
     }
 
-    @DisplayName("postid가 deleted일때")
+    @DisplayName("UT-4-002 : Read a post with Post ID deleted")
     @Test
     void testGetPostById_Fail() throws Exception {
-        //when(postService.getPostById(savedPostDeleted.getPostId())).thenThrow(new RuntimeException("Post Id is deleted"));
-
         mockMvc.perform(get("/api/post_read")
                         .param("post_id", String.valueOf(savedPostDeleted.getPostId()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value("Post Id is deleted"));
+                .andExpect(jsonPath("$.message").value("No Content"));
 
         verify(postService, times(1)).getPostById(savedPostDeleted.getPostId());
     }
 
-    @DisplayName("post_id가 문자열인 경우")
+    @DisplayName("UT-4-003 : Read a post by Post ID which is String type")
     @Test
     void testGetPostById_InvalidFormat() throws Exception {
         mockMvc.perform(get("/api/post_read")
@@ -177,23 +159,65 @@ public class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value("FAIL"));
+                .andExpect(jsonPath("$.message").value("Request Format Error"));
 
         verify(postService, times(0)).getPostById(anyLong());
     }
 
-    @DisplayName("존재하지 않는 포스트 ID 조회 시 데이터 없음 응답")
+    @DisplayName("UT-4-004 : Read a post by Post ID which is not found")
     @Test
     void testGetPostById_NotFound() throws Exception {
-        //when(postService.getPostById(1000L)).thenThrow(new DataNotFoundException("Post not found"));
-
         mockMvc.perform(get("/api/post_read")
                         .param("post_id", "1000")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value("Post not found"));
+                .andExpect(jsonPath("$.message").value("No Content"));
 
         verify(postService, times(1)).getPostById(1000L);
+    }
+
+    @DisplayName("UT-5-001 : Update a post with missing required fields")
+    @Test
+    void testUpdatePost_MissingRequiredFields() throws Exception {
+        mockMvc.perform(put("/api/post_update")
+                        .param("post_id", String.valueOf(savedPostNotDeleted.getPostId()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"content\": \"Updated Content\"}"))  // No title
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Missing Required Fields"));
+
+        verify(postService, times(0)).updatePost(anyLong(), any(Post.class));
+    }
+
+    @DisplayName("UT-6-001 : Delete a post by Post ID which is not found")
+    @Test
+    void testDeletePostById_NotFound() throws Exception {
+        when(postService.getPostById(1000L)).thenReturn(null);
+
+        mockMvc.perform(put("/api/post_delete")
+                        .param("post_id", "1000")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("No Content"));
+
+        verify(postService, times(1)).getPostById(1000L);
+    }
+
+    @DisplayName("UT-6-002 : Delete a post by Post ID which is already deleted")
+    @Test
+    void testDeletePostById_AlreadyDeleted() throws Exception {
+        when(postService.getPostById(savedPostDeleted.getPostId())).thenReturn(savedPostDeleted);
+
+        mockMvc.perform(put("/api/post_delete")
+                        .param("post_id", String.valueOf(savedPostDeleted.getPostId()))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Post Already Deleted"));
+
+        verify(postService, times(1)).getPostById(savedPostDeleted.getPostId());
     }
 }

@@ -26,13 +26,14 @@ public class VoteController {
         try {
             Optional<List<Vote>> voteOptional = voteService.getAllVotes();
             if (voteOptional.isPresent()) {
-                return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "SUCCESS", voteOptional.get()));
-            }else {
-                return ResponseEntity.ok(new ApiResponse<>(false, HttpStatus.NO_CONTENT.value(), "FAIL", "NOT CONTENT"));
+                return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "-", "No Error", voteOptional.get()));
+            } else {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                        .body(new ApiResponse<>(false, HttpStatus.NO_CONTENT.value(), "E002", "No Content", null));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR"));
+                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "-", "Internal Server Error: " + e.getMessage()));
         }
     }
 
@@ -41,13 +42,14 @@ public class VoteController {
         try {
             Optional<Vote> voteOptional = voteService.getVoteById(userId, postId);
             if (voteOptional.isPresent()) {
-                return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "SUCCESS", voteOptional.get()));
+                return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "", "No Error", voteOptional.get()));
             } else {
-                return ResponseEntity.ok(new ApiResponse<>(false, HttpStatus.NO_CONTENT.value(), "FAIL", "NOT CONTENT"));
+                return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                        .body(new ApiResponse<>(false, HttpStatus.NO_CONTENT.value(), "E002", "No Content", null));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR"));
+                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "-", "Internal Server Error: " + e.getMessage()));
         }
     }
 
@@ -56,13 +58,16 @@ public class VoteController {
         try {
             Vote createdVote = voteService.createVote(vote);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new ApiResponse<>(true, HttpStatus.CREATED.value(), "SUCCESS", createdVote));
+                    .body(new ApiResponse<>(true, HttpStatus.CREATED.value(), "-", "-",  createdVote));
         } catch (DataAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new ApiResponse<>(false, HttpStatus.CONFLICT.value(), "FAIL", e.getMessage()));
+                    .body(new ApiResponse<>(false, HttpStatus.CONFLICT.value(), "-", "Vote already exists", e.getMessage()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorApiResponse(false, HttpStatus.NOT_FOUND.value(), "-", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR"));
+                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "-", "Internal Server Error: " + e.getMessage()));
         }
     }
 
@@ -70,13 +75,16 @@ public class VoteController {
     public ResponseEntity<?> deleteVote(@RequestBody Vote vote) {
         try {
             voteService.deleteVote(vote);
-            return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "SUCCESS", "Delete Vote Successfully"));
+            return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "-", "No Error",  null));
         } catch (DataNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                    .body(new ErrorApiResponse(false, HttpStatus.NO_CONTENT.value(), e.getMessage()));
+                    .body(new ErrorApiResponse(false, HttpStatus.NO_CONTENT.value(), "-",  e.getMessage()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorApiResponse(false, HttpStatus.NOT_FOUND.value(), "-",  e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR"));
+                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "-", "Internal Server Error: " + e.getMessage()));
         }
     }
 }

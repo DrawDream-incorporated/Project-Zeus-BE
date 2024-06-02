@@ -26,14 +26,14 @@ public class TopicController {
         try {
             List<Topic> topics = topicService.getAllTopics();
             if (topics != null) {
-                return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "SUCCESS", topics));
+                return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "-", "No Error", topics));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponse<>(true, HttpStatus.OK.value(), "FAIL", "DATA NOT FOUND"));
+                        .body(new ApiResponse<>(true, HttpStatus.OK.value(), "E002", "No Content", null));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR"));
+                    .body(new ErrorApiResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "-", "INTERNAL SERVER ERROR"));
         }
     }
 
