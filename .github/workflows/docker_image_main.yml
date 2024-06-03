@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Image Main CI
 
 on:
   push:
@@ -42,9 +42,7 @@ jobs:
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: .ecs/prod/task_main.json # task파일
-#          service: ecs-task-posting-2 #클러스터 서비스 명
-#          cluster: my-fisrt-cluster # 클러스터 명
-          service: main-service #클러스터 서비스 명
-          cluster: main-cluster # 클러스터 명
+          task-definition: .ecs/prod/task_main.json
+          service: main-service
+          cluster: main-cluster
           wait-for-service-stability: 'true'
