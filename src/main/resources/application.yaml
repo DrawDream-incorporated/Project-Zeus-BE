@@ -1,4 +1,4 @@
-# Development, Production
+ Development, Production
 spring:
   datasource:
     url: ${POSTING_DB_URL_PRODUCTION}
@@ -11,7 +11,7 @@ spring:
       ddl-auto: validate  # production, development
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: false   # production, development
 
 #spring:
@@ -26,5 +26,5 @@ spring:
 #      ddl-auto: update # or use 'create' to create the schema on startup, 'validate' to validate the schema, none to do nothing.
 #    properties:
 #      hibernate:
-#        dialect: org.hibernate.dialect.MySQL8Dialect
+#        dialect: org.hibernate.dialect.MySQLDialect
 #        format_sql: true
