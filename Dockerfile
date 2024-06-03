@@ -4,11 +4,6 @@ FROM amazoncorretto:17
 # Set the working directory inside the container
 WORKDIR /app
 
-# Build argument for Spring profile
-ARG SPRING_PROFILES_ACTIVE
-
-# Set environment variable for Spring profile
-ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
 
 # Copy the built artifact into the container
 COPY build/libs/*.jar myapp.jar
