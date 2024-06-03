@@ -16,6 +16,12 @@
           "protocol": "tcp"
         }
       ],
+      "environment": [
+        {
+          "name": "SPRING_PROFILES_ACTIVE",
+          "value": "production"
+        }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
