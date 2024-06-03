@@ -4,7 +4,7 @@ spring:
     url: ${POSTING_DB_URL_DEVELOPMENT}
     driverClassName: com.mysql.cj.jdbc.Driver
     username: ${POSTING_DB_USERNAME}
-    password: ${POSTING_VALIDATE}
+    password: ${POSTING_DB_PASSWORD}
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
