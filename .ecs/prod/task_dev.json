@@ -14,6 +14,20 @@
           "appProtocol": "http"
         }
       ],
+      "secrets": [
+        {
+          "name": "POSTING_DB_URL_DEVELOPMENT",
+          "valueFrom": "arn:aws:ssm:ca-central-1:555223129948:parameter/POSTING_DB_URL_DEVELOPMENT"
+        },
+        {
+          "name": "POSTING_DB_USERNAME",
+          "valueFrom": "arn:aws:ssm:ca-central-1:555223129948:parameter/POSTING_DB_USERNAME"
+        },
+        {
+          "name": "POSTING_DB_PASSWORD",
+          "valueFrom": "arn:aws:ssm:ca-central-1:555223129948:parameter/POSTING_DB_PASSWORD"
+        }
+      ],
       "essential": true,
       "environmentFiles": [],
       "mountPoints": [],
@@ -27,20 +41,6 @@
           "awslogs-region": "ca-central-1",
           "awslogs-stream-prefix": "ecs"
         },
-        "secrets": [
-          {
-            "name": "POSTING_DB_URL_DEVELOPMENT",
-            "valueFrom": "arn:aws:ssm:ca-central-1:555223129948:parameter/POSTING_DB_URL_DEVELOPMENT"
-          },
-          {
-            "name": "POSTING_DB_USERNAME",
-            "valueFrom": "arn:aws:ssm:ca-central-1:555223129948:parameter/POSTING_DB_USERNAME"
-          },
-          {
-            "name": "POSTING_DB_PASSWORD",
-            "valueFrom": "arn:aws:ssm:ca-central-1:555223129948:parameter/POSTING_DB_PASSWORD"
-          }
-        ],
         "secretOptions": []
       },
       "systemControls": []
