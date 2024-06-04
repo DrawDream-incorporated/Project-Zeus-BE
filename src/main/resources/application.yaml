@@ -1,7 +1,7 @@
 # Development, Production
 spring:
   datasource:
-    url: ${POSTING_DB_URL_DEVELOPMENT}
+    url: ${POSTING_DB_URL_PRODUCTION}
     driverClassName: com.mysql.cj.jdbc.Driver
     username: ${POSTING_DB_USERNAME}
     password: ${POSTING_DB_PASSWORD}
