@@ -39,3 +39,20 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+task setDevProfile {
+	doLast {
+		System.setProperty('spring.profiles.active', 'development')
+	}
+}
+
+task setProdProfile {
+	doLast {
+		System.setProperty('spring.profiles.active', 'production')
+	}
+}
+
+test {
+	useJUnitPlatform()
+	systemProperty 'spring.profiles.active', System.getProperty('spring.profiles.active', 'local')
+}
