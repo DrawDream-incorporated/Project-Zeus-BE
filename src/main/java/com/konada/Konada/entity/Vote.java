@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "Vote")
+@Table(name = "vote")
 public class Vote {
 
     @EmbeddedId

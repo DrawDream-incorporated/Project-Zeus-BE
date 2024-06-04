@@ -12,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "Post")
+@Table(name = "post")
 public class Post {
 
     @Id
