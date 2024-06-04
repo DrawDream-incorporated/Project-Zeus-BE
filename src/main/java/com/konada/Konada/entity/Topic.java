@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Topic {
 
     @Id
-    @Column(name = "topic_id", nullable = false)
+    @Column(name = "topic_id", nullable = false, length = 255)
     private String topicId;
 
     @Column(name = "topic_name", nullable = false)
