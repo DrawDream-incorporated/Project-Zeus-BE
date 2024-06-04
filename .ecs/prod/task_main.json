@@ -16,7 +16,7 @@
       ],
       "secrets": [
         {
-          "name": "POSTING_DB_URL_PRODUCTION",
+          "name": "POSTING_DB_URL_DEVELOPMENT",
           "valueFrom": "arn:aws:ssm:ca-central-1:555223129948:parameter/POSTING_DB_URL_PRODUCTION"
         },
         {
