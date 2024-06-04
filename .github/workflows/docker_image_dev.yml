@@ -42,7 +42,7 @@ jobs:
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: .ecs/prod/task_dev.json # task파일
-          service: dev-service #클러스터 서비스 명
-          cluster: dev-cluster # 클러스터 명
+          task-definition: .ecs/prod/task_dev.json # task
+          service: dev-service # service
+          cluster: dev-cluster # cluter
           wait-for-service-stability: 'true'

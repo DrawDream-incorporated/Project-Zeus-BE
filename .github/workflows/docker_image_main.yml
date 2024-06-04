@@ -19,12 +19,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        env:
-          SPRING_PROFILES_ACTIVE: production  # production profile
         run: ./gradlew build
       - name: Run tests with Gradle
-        env:
-          SPRING_PROFILES_ACTIVE: production  # production profile
         run: ./gradlew test
       - name: Get current time
         id: current-time
@@ -39,8 +35,6 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         id: login-ecr
       - name: Build, tag, and push image to Amazon ECR
-        env:
-          SPRING_PROFILES_ACTIVE: production  # production profile
         run: |
           docker build -t posting-api:latest .
           docker tag posting-api:latest ${{ secrets.AWS_ECR_REGISTRY }}:latest
@@ -48,7 +42,7 @@ jobs:
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: .ecs/prod/task_main.json
-          service: main-service
-          cluster: main-cluster
+          task-definition: .ecs/prod/task_main.json # task
+          service: main-service # serivce
+          cluster: main-cluster # cluster
           wait-for-service-stability: 'true'
