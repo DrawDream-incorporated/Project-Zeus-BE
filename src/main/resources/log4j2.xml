@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" monitorInterval="5">
+    <!-- Common property settings  -->
+    <Properties>
+        <Property name="logFileName">log4jFile</Property>
+        <Property name="consoleLayout">[%d{yyyy-MM-dd HH:mm:ss}] [%-5p] [%c{1}:%L] - %m%n</Property>
+        <Property name="fileLayout">%d [%t] %-5level %c(%M:%L) - %m%n</Property>
+    </Properties>
+
+    <!-- Configure Log Appender  -->
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${consoleLayout}" />
+        </Console>
+        <!-- ConsoleAppender, RollingFileAppender -->
+        <RollingFile name="file"
+                     fileName="logs/${logFileName}.log"
+                     filePattern="logs/${logFileName}.%d{yyyy-MM-dd-hh}.log">
+            <PatternLayout>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1" /><!-- 시간별 로그 파일 생성 -->
+            </Policies>
+            <!-- Create up to 5 rolling files -->
+            <DefaultRolloverStrategy max="5" fileIndex="min">
+                <Delete basePath="logs" maxDepth="3">
+                    <IfLastModified age="10d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="daily_error"
+                     fileName="logs/error/error.log"
+                     filePattern="logs/error/error.%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${fileLayout}" />
+            <!-- LevelRangeFilter -->
+            <LevelRangeFilter minLevel="WARN" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20 MB" />
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="logs/error" maxDepth="3">
+                    <IfLastModified age="10d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <!-- TRACE > DEBUG > INFO > WARN > ERROR > FATAL -->
+    <!-- Setting Loggers  -->
+    <Loggers>
+        <!-- Setting level as "info" -->
+        <logger name="org.springframework" level="info" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </logger>
+
+        <!-- Logger for specific package with warn level and error appender -->
+        <logger name="kr.pe.study.logforjava2" level="warn" additivity="true">
+            <AppenderRef ref="daily_error" />
+        </logger>
+
+        <!-- Root logger configuration -->
+        <Root level="info">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Root>
+    </Loggers>
+</Configuration>
