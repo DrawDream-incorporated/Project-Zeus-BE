@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: ${POSTING_DB_URL_PRODUCTION}
+    url: jdbc:mysql://localhost:3306/konada?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
     driverClassName: com.mysql.cj.jdbc.Driver
-    username: ${POSTING_DB_USERNAME}
-    password: ${POSTING_DB_PASSWORD}
+    username: user
+    password: userpassword
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
