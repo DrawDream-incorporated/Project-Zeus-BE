@@ -35,9 +35,9 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         id: login-ecr
       - name: Build, tag, and push image to Amazon ECR
-        run: |
-          docker build -t app-repo-main:latest .
-          docker tag app-repo-main:latest ${{ secrets.AWS_ECR_REGISTRY }}:latest
+        run: |s
+          docker build -t posting-api:latest .
+          docker tag posting-api:latest ${{ secrets.AWS_ECR_REGISTRY }}:latest
           docker push ${{ secrets.AWS_ECR_REGISTRY }}:latest
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
